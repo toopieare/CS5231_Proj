@@ -92,19 +92,3 @@ The visualization shows:
 Edge types:
 - Normal edges (-->) indicate standard parent-child relationships
 - Bold edges (==>) indicate relationships involving suspicious processes
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
-
-## License
-
-This project is open source and available under the MIT License.
-
-## Note
-
-This tool is designed for educational and analytical purposes. Always verify findings through additional security analysis tools and methods.
