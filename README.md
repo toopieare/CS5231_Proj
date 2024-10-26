@@ -7,7 +7,7 @@ This tool analyzes and visualizes process relationships and behaviors from Linux
 - Parses auditbeat NDJSON log files
 - Builds process hierarchy trees
 - Identifies suspicious process behaviors and security concerns
-- Generates interactive visualizations using Mermaid.js
+- Generates visualization using Mermaid.js
 - Color-coded process classification:
   - 🟢 Green: Root processes (PID 1)
   - 🔵 Blue: Normal processes
