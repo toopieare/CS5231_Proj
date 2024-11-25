@@ -24,7 +24,7 @@ def main():
     # Save HTML visualization
     html_content = create_html_output(mermaid_code)
     output_path = os.path.join(Config.OUTPUT_DIR, 'process_flow.html')
-    with open(output_path, 'w') as f:
+    with open(output_path, 'w', encoding='utf-8') as f:
         f.write(html_content)
     
     print("Process flow visualization has been generated!")
