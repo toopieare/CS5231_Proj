@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dual Analysis Framework Diagram</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .diagram-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin: 20px auto;
+            max-width: 1200px;
+        }
+    </style>
+</head>
+<body>
+    <div class="diagram-container">
+        <div class="mermaid">
+            flowchart TD
+                subgraph Input
+                    A[Auditbeat Logs] --> B[Log Parser]
+                end
+                subgraph Analysis["Dual Analysis Framework"]
+                    subgraph Traditional["Traditional Analysis"]
+                        C[Process Tree Builder]
+                        D[Security Analyzer]
+                        E[Behavior Analyzer]
+                    end
+                    subgraph ML["ML Analysis"]
+                        F[Feature Extractor]
+                        G[Autoencoder Model]
+                        H[Anomaly Detector]
+                    end
+                end
+                subgraph Visualization
+                    I[Process Tree View]
+                    J[Timeline View]
+                    K[Analysis Comparison]
+                end
+                B --> Traditional
+                B --> ML
+                C --> I
+                D --> I
+                E --> I & J
+                F --> G
+                G --> H
+                H --> K
+                E --> K
+                
+                classDef traditional fill:#a8e6cf,stroke:#333
+                classDef ml fill:#ffd3b6,stroke:#333
+                classDef input fill:#dcedc1,stroke:#333
+                classDef viz fill:#98c1d9,stroke:#333
+                
+                class A,B input
+                class C,D,E traditional
+                class F,G,H ml
+                class I,J,K viz
+        </div>
+    </div>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            securityLevel: 'loose'
+        });
+    </script>
+</body>
+</html>
