@@ -1,6 +1,7 @@
 from collections import defaultdict
 import numpy as np
 from datetime import datetime, timedelta
+import pandas as pd
 
 class BehaviorAnalyzer:
     def __init__(self):
