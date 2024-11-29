@@ -1,6 +1,6 @@
 class Config:
     OUTPUT_DIR = './output'
-    LOG_FILE = './input/auditbeat-20241125-4.ndjson'
+    LOG_FILE = './input/auditbeat-20241129-7.ndjson'
     
     MERMAID_CONFIG = {
         'curve': 'basis',
