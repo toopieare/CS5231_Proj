@@ -56,7 +56,7 @@ class BehaviorAnalyzer:
         # Calculate time-based metrics
         time_range = max(timestamps[pid]) - min(timestamps[pid])
         calls_per_second = len(timestamps[pid]) / max(time_range.total_seconds(), 1)
-        
+            
         # Calculate category scores
         category_scores = defaultdict(float)
         total_calls = sum(frequencies[pid].values())
@@ -69,6 +69,28 @@ class BehaviorAnalyzer:
         syscall_diversity = len(frequencies[pid]) / max(total_calls, 1)
         frequency_score = min(calls_per_second / 10, 1)  # Normalize to 0-1
         
+        # Define expected profiles
+        expected_profiles = {
+            'file_server': {'file': 0.8, 'network': 0.1, 'process': 0.05, 'privilege': 0.01},
+            'web_server': {'file': 0.1, 'network': 0.8, 'process': 0.05, 'privilege': 0.01},
+            'user_process': {'file': 0.4, 'network': 0.2, 'process': 0.3, 'privilege': 0.01}
+        }
+        
+        # Calculate deviation from expected profiles
+        deviations = []
+        for profile in expected_profiles.values():
+            deviation = sum(
+                abs(category_scores[cat] - profile.get(cat, 0)) 
+                for cat in self.syscall_categories
+            )
+            deviations.append(deviation)
+
+        # Use minimum deviation (closest matching profile)
+        profile_deviation = min(deviations)
+        
+        # Special attention to privilege operations
+        privilege_anomaly = category_scores['privilege'] > 0.05  # Flag unusual privilege activity
+        
         # Debug print
         print(f"\nPID {pid} score calculation:")
         print(f"  Time range: {time_range}")
@@ -76,12 +98,15 @@ class BehaviorAnalyzer:
         print(f"  Syscall diversity: {syscall_diversity}")
         print(f"  Frequency score: {frequency_score}")
         print(f"  Category scores: {dict(category_scores)}")
-        
+        print(f"  Profile deviation: {profile_deviation}")
+        print(f"  Privilege anomaly: {privilege_anomaly}")
+
         # Combine scores
         behavior_score = (
             syscall_diversity * 0.3 +
             frequency_score * 0.3 +
-            sum(category_scores.values()) * 0.4
+            profile_deviation * 0.3 +    # Higher deviation = more suspicious
+            (1.0 if privilege_anomaly else 0.0) * 0.1
         )
         
         print(f"  Final behavior score: {behavior_score}")
