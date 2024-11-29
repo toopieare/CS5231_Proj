@@ -19,16 +19,28 @@ class BehaviorAnalyzer:
         
         for _, row in df.iterrows():
             pid = row['pid']
-            syscall = row.get('syscall')  # Use get() to handle missing syscall
-            timestamp_str = row.get('@timestamp') or row.get('timestamp')  # Try both possible timestamp fields
+            syscall = row.get('syscall')
             
-            if syscall and timestamp_str:
+            # Check both possible timestamp formats and ensure it's a datetime
+            timestamp = row.get('@timestamp') or row.get('timestamp')
+            if isinstance(timestamp, str):
                 try:
-                    timestamp = datetime.fromisoformat(timestamp_str.replace('Z', '+00:00'))
-                    frequencies[pid][syscall] += 1
-                    timestamps[pid].append(timestamp)
-                except (ValueError, AttributeError):
-                    continue  # Skip invalid timestamps
+                    timestamp = pd.to_datetime(timestamp)
+                except (ValueError, TypeError):
+                    continue
+            
+            if syscall and timestamp is not None:
+                frequencies[pid][syscall] += 1
+                timestamps[pid].append(timestamp)
+        
+        # Debug print to check what we're capturing
+        for pid in frequencies:
+            print(f"\nPID {pid} frequency data:")
+            print(f"  Syscalls: {dict(frequencies[pid])}")
+            print(f"  Timestamp count: {len(timestamps[pid])}")
+            if timestamps[pid]:
+                print(f"  First timestamp: {min(timestamps[pid])}")
+                print(f"  Last timestamp: {max(timestamps[pid])}")
         
         return frequencies, timestamps
     
@@ -36,11 +48,11 @@ class BehaviorAnalyzer:
         """Calculate a behavior score based on syscall patterns."""
         if pid not in frequencies or not frequencies[pid]:
             return 0, {}
-        
-        # Calculate time-based metrics
+            
         if not timestamps[pid]:
             return 0, {}
-            
+        
+        # Calculate time-based metrics
         time_range = max(timestamps[pid]) - min(timestamps[pid])
         calls_per_second = len(timestamps[pid]) / max(time_range.total_seconds(), 1)
         
@@ -56,12 +68,22 @@ class BehaviorAnalyzer:
         syscall_diversity = len(frequencies[pid]) / max(total_calls, 1)
         frequency_score = min(calls_per_second / 10, 1)  # Normalize to 0-1
         
+        # Debug print
+        print(f"\nPID {pid} score calculation:")
+        print(f"  Time range: {time_range}")
+        print(f"  Calls per second: {calls_per_second}")
+        print(f"  Syscall diversity: {syscall_diversity}")
+        print(f"  Frequency score: {frequency_score}")
+        print(f"  Category scores: {dict(category_scores)}")
+        
         # Combine scores
         behavior_score = (
             syscall_diversity * 0.3 +
             frequency_score * 0.3 +
             sum(category_scores.values()) * 0.4
         )
+        
+        print(f"  Final behavior score: {behavior_score}")
         
         return behavior_score, category_scores
 
