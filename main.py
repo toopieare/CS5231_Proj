@@ -29,7 +29,7 @@ def initialize_analyzers(df):
 def generate_visualizations(process_tree, security_analyzer, behavior_analyzer, df):
     """Generate all visualizations."""
     print("Generating visualizations...")
-    traditional_mermaid = generate_mermaid_diagram(process_tree, security_analyzer, df)
+    traditional_mermaid = generate_mermaid_diagram(process_tree, security_analyzer, behavior_analyzer, df)
     gantt_mermaid = generate_gantt_diagram(process_tree, security_analyzer, behavior_analyzer, df)
     return traditional_mermaid, gantt_mermaid
 
