@@ -7,10 +7,7 @@ from src.analysis.ml_behavior_analyzer import MLBehaviorAnalyzer
 from src.analysis.process_tree import build_process_tree
 from src.visualization.mermaid_generator import generate_mermaid_diagram, generate_gantt_diagram
 from src.visualization.html_generator import create_html_output
-from src.analysis.analysis_reporter import (
-    generate_comparison_report,
-    validate_behavior_scores
-)
+from src.analysis.analysis_reporter import generate_comparison_report, validate_behavior_scores
 from config import Config
 
 def initialize_analyzers(df):
@@ -79,6 +76,7 @@ def main():
     print("Visualizations have been generated!")
     print(f"Open '{Config.OUTPUT_DIR}/process_flow.html' for the process tree view")
     print(f"Open '{Config.OUTPUT_DIR}/process_gantt.html' for the timeline view")
+    print(f"Open '{Config.OUTPUT_DIR}/analysis_comparison.html' to compare behavior scores (trad vs ML)")
 
 if __name__ == "__main__":
     main()
